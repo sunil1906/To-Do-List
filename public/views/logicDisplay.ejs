@@ -1,153 +1,102 @@
-<!DOCTYPE html>
-<html lang="en">
+<%-include("./partials/header.ejs")%>
 
-<head>
-    <head>
-        <link rel="stylesheet" type="text/css"
-            href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
+    <!-- Full Calendar -->
+    <script>
 
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.6.0/main.min.css">
-        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.6.0/main.min.js"></script>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script>
+        var data =<%-JSON.stringify(data)%>;
+        var startHrs = <%-JSON.stringify(startHrs)%>;
+        var endHrs = <%-JSON.stringify(endHrs)%>;
+        document.addEventListener('DOMContentLoaded', function() {
 
-            var data =<%-JSON.stringify(data)%>;
-            var startHrs = <%-JSON.stringify(startHrs)%>;
-            var endHrs = <%-JSON.stringify(endHrs)%>;
-            document.addEventListener('DOMContentLoaded', function() {
+            
+            var calendarEl = document.getElementById('calendar');
 
-                
-                var calendarEl = document.getElementById('calendar');
-
-                var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                initialDate: '2021-05-12',
-                slotMinTime: startHrs + ":00:00",
-                slotMaxTime: endHrs + ":00:00",
-                headerToolbar: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
-                },
-                events: data
-                });
-
-                calendar.render();
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            initialDate: '2021-05-12',
+            slotMinTime: startHrs + ":00:00",
+            slotMaxTime: endHrs + ":00:00",
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            events: data
             });
 
-        </script>
-        <style>
-            .split {
-            height: 100%;
-            width: 50%;
-            position: fixed;
-            z-index: 1;
-            
-            overflow-x: hidden;
-            padding-top: 20px;
-            }
+            calendar.render();
+        });
 
-            .left {
-            left: 0;
-            padding-bottom: 5%;
-            }
-            .right {
-            right: 0;
+    </script>
 
-            }
-        </style>
-    </head>
 
-<body>
-    <div class="ui inverted menu">
-        <div class="ui container">
-            <div class="header item"><i class="code icon"></i>TodoList</div>
-            
-            <a href="/new" class="item">New</a>
-            <a href="/homepage" class="item">Dashboard</a>
-            <a href="/algo/ffcs" class="item">FFCS</a>
-            <a href="/algo/sjf" class="item">SJF</a>
-            <a href="/algo/priority" class="item">Priority</a>
-            <a href="/algo/rr" class="item">Round Robin</a>
-            <a href="/settings" class="item">Settings</a>
-            <div class="right menu">
-                <a href="/" class="item ">Log Out </a>
-            </div>
-        </div>
-    </div>
-    <div class="split left">
-        <div class="ui main text container">
-            <div class="ui huge header"><%=name%></div>
-            <div > Avg. Turnaround Time: <%=tat.toFixed(2)%></div>
-            <div > Avg. Waiting Time: <%=wt.toFixed(2)%></div>
-            <div class="ui top attached segment">
-                <div class="ui divided items">
-                    <% algo.forEach(function(todo){ %>
-                        <div class="item">
-                            <div class="content">
-                                <div>
-                                    <span>
-                                        <b>Task Name:</b>
-                                        <%=todo.title%>
-                                    </span>
-                                </div>
-                                <div>
-                                    <span>
-                                        <b>Task Description:</b>
-                                        <%=todo.body%>
-                                    </span>
-                                </div>
-                                <div>
-                                    <b>Estimation time to complete the Task: </b>
-                                    <span> <%=Math.floor(todo.bt)%> </span>
-                                    <span> hours </span>
-                                    <span> <%=Math.round((todo.bt % 1)*60)%></span>
-                                    <span> minutes </span>
-                                    
-                                </div>
-                                <div>
-                                    <span>
-                                        <b>Task Priority:</b>
-                                        <%=todo.priority%>
-                                    </span>
-                                </div>
-                                <div>
-                                    <span>
-                                        <b>From: </b>
-                                        <%=String(todo.from.dd) + '/' + String(todo.from.mm) + '/' + String(todo.from.yy) + '---'%>
-                                        <%= Math.floor(todo.from.hh) + Number(startHrs)%>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="ui main text container">
+                <div class="ui huge header"><%=name%></div>
+                <div > Avg. Turnaround Time: <%=tat.toFixed(2)%></div>
+                <div > Avg. Waiting Time: <%=wt.toFixed(2)%></div>
+                <div class="ui top attached segment">
+                    <div class="ui divided items">
+                        <% algo.forEach(function(todo){ %>
+                            <div class="item">
+                                <div class="content">
+                                    <div>
+                                        <span>
+                                            <b>Task Name:</b>
+                                            <%=todo.title%>
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <span>
+                                            <b>Task Description:</b>
+                                            <%=todo.body%>
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <b>Estimation time to complete the Task: </b>
+                                        <span> <%=Math.floor(todo.bt)%> </span>
                                         <span> hours </span>
-                                        <%= Math.round((todo.from.hh % 1) * 60 ) %>
+                                        <span> <%=Math.round((todo.bt % 1)*60)%></span>
                                         <span> minutes </span>
-    
-                                        <b>To: </b>
-                                        <%=String(todo.to.dd) + '/' + String(todo.to.mm) + '/' + String(todo.to.yy) + '---'%>
-                                        <%= Math.floor(todo.to.hh) + Number(startHrs)%>
-                                        <span> hours </span>
-                                        <%= Math.round((todo.to.hh % 1) * 60 ) %>
-                                        <span> minutes </span>
-                                    </span>
+                                        
+                                    </div>
+                                    <div>
+                                        <span>
+                                            <b>Task Priority:</b>
+                                            <%=todo.priority%>
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <span>
+                                            <b>From: </b>
+                                            <%=String(todo.from.dd) + '/' + String(todo.from.mm) + '/' + String(todo.from.yy) + '---'%>
+                                            <%= Math.floor(todo.from.hh) + Number(startHrs)%>
+                                            <span> hours </span>
+                                            <%= Math.round((todo.from.hh % 1) * 60 ) %>
+                                            <span> minutes </span>
+        
+                                            <b>To: </b>
+                                            <%=String(todo.to.dd) + '/' + String(todo.to.mm) + '/' + String(todo.to.yy) + '---'%>
+                                            <%= Math.floor(todo.to.hh) + Number(startHrs)%>
+                                            <span> hours </span>
+                                            <%= Math.round((todo.to.hh % 1) * 60 ) %>
+                                            <span> minutes </span>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <hr>
-    
-                        <% }); %>
+                            <hr>
+        
+                            <% }); %>
+                    </div>
                 </div>
             </div>
         </div>
+    
+        <div class="col-md-6">
+            <div style="margin: 5% 5%; border: 1px solid gray;" id='calendar'></div>
+        </div>
     </div>
 
-    <div class="split right">
-        <div style="margin: 5% 5%; border: 1px solid gray;" id='calendar'></div>
-    </div>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-    crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
-    crossorigin="anonymous"></script>
-</body>
-
-</html>
+<%-include("./partials/footer.ejs")%>

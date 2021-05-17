@@ -4,6 +4,7 @@ const methodOverride = require("method-override");
 const mongoose = require("mongoose");
 
 var dbUrl = "mongodb+srv://sunil1906:srk12345@cluster0.dr6jp.mongodb.net/todoList?retryWrites=true&w=majority" || "mongodb://localhost:27017/todoList";
+// var dbUrl = "mongodb://localhost:27017/todoList";
 mongoose.connect(dbUrl, { useNewUrlParser: true,  useUnifiedTopology: true});
 const app = express();
 const logicModule = require('./public/views/logic.js')
@@ -152,13 +153,26 @@ app.get("/homepage", function (req, res) {
 		if(err){
 			console.log(err);
 		} else {
-            var answer = logicModule.logic(userFound.todo, userFound.quantum, userFound.workingHoursPerDay);
-            var wt_tat = answer.slice(4, 12);
-			res.render(__dirname + "/public/views/Homepage", { user:userFound, Usrnm:username, wt_tat: wt_tat});
+			res.render(__dirname + "/public/views/Homepage", { user:userFound, Usrnm:username});
 		}
 	});
 
 })
+
+app.get("/efficiency", function (req, res) {
+
+	user.findById(id, function(err, userFound){
+		if(err){
+			console.log(err);
+		} else {
+            var answer = logicModule.logic(userFound.todo, userFound.quantum, userFound.workingHoursPerDay);
+            var wt_tat = answer.slice(4, 12);
+			res.render(__dirname + "/public/views/efficiency", { user:userFound, Usrnm:username, wt_tat: wt_tat});
+		}
+	});
+
+})
+
 app.post("/task", function (req, res) {
     user.findById( id, function (err, userFound) {
         if (err) {
@@ -188,19 +202,19 @@ app.get("/algo/:query", function(req, res){
             if(endHrs.length == 1) {endHrs = '0' + endHrs}
             if(req.params.query === "ffcs"){
                 data = calendarDetails(answer, userFound.startingTime, 0);
-                res.render(__dirname + "/public/views/logicDisplay", {algo: answer[0], name: "FFCS", startHrs: startHrs, endHrs: endHrs, data: data, tat: answer[4], wt: answer[5]})
+                res.render(__dirname + "/public/views/logicDisplay", { Usrnm:username, algo: answer[0], name: "FFCS", startHrs: startHrs, endHrs: endHrs, data: data, tat: answer[4], wt: answer[5]})
             }
             if(req.params.query === "sjf"){
                 data = calendarDetails(answer, userFound.startingTime, 1);
-                res.render(__dirname + "/public/views/logicDisplay", {algo: answer[1], name: "SJF", startHrs: startHrs, endHrs: endHrs, data: data, tat: answer[6], wt: answer[7]})
+                res.render(__dirname + "/public/views/logicDisplay", { Usrnm:username, algo: answer[1], name: "SJF", startHrs: startHrs, endHrs: endHrs, data: data, tat: answer[6], wt: answer[7]})
             }
             if(req.params.query === "priority"){
                 data = calendarDetails(answer, userFound.startingTime, 2);
-                res.render(__dirname + "/public/views/logicDisplay", {algo: answer[2], name: "Priority", startHrs: startHrs, endHrs: endHrs, data: data, tat: answer[8], wt: answer[9]})
+                res.render(__dirname + "/public/views/logicDisplay", { Usrnm:username, algo: answer[2], name: "Priority", startHrs: startHrs, endHrs: endHrs, data: data, tat: answer[8], wt: answer[9]})
             }
             if(req.params.query === "rr"){
                 data = calendarDetails(answer, userFound.startingTime, 3);
-                res.render(__dirname + "/public/views/logicDisplay", {algo: answer[3], name: "Round Robin", startHrs: startHrs, endHrs: endHrs, data: data, tat: answer[10], wt: answer[11]})
+                res.render(__dirname + "/public/views/logicDisplay", { Usrnm:username, algo: answer[3], name: "Round Robin", startHrs: startHrs, endHrs: endHrs, data: data, tat: answer[10], wt: answer[11]})
             }
         }
     });
@@ -227,7 +241,7 @@ app.get("/modify/:id", function(req,res){
         } else{
             var arr = userFound.todo;
             var mod = arr.filter((item) => item.id === req.params.id);
-            res.render(__dirname + "/public/views/modify", {todoModify: mod[0]});
+            res.render(__dirname + "/public/views/modify", {Usrnm:username, todoModify: mod[0]});
         }
     });
 });
@@ -258,7 +272,7 @@ app.get("/settings", function(req, res){
         if(err){
             console.log("Error!");
         } else{
-            res.render(__dirname + "/public/views/settings", {failed: settingFailed, quantum: userFound.quantum, start: (userFound.startingTime+":00"), hrs:userFound.workingHoursPerDay});
+            res.render(__dirname + "/public/views/settings", {failed: settingFailed, quantum: userFound.quantum, start: (userFound.startingTime+":00"), hrs:userFound.workingHoursPerDay, Usrnm:username});
         }
     });
     
