@@ -202,7 +202,7 @@ app.get("/algo/:query", function(req, res){
             if(endHrs.length == 1) {endHrs = '0' + endHrs}
             if(req.params.query === "ffcs"){
                 data = calendarDetails(answer, userFound.startingTime, 0);
-                res.render(__dirname + "/public/views/logicDisplay", { Usrnm:username, algo: answer[0], name: "FFCS", startHrs: startHrs, endHrs: endHrs, data: data, tat: answer[4], wt: answer[5]})
+                res.render(__dirname + "/public/views/logicDisplay", { Usrnm:username, algo: answer[0], name: "FCFS", startHrs: startHrs, endHrs: endHrs, data: data, tat: answer[4], wt: answer[5]})
             }
             if(req.params.query === "sjf"){
                 data = calendarDetails(answer, userFound.startingTime, 1);
